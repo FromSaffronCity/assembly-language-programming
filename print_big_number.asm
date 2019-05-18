@@ -18,11 +18,21 @@ NEWLINE DB 0AH, 0DH, '$'
     MOV DS, AX
     
     ; VALUES SETTING
-    MOV NUMBER, 456
-    MOV DIVISOR, 10000  
+    MOV NUMBER, 4565
+    MOV DIVISOR, 1000  
     MOV DIGIT, 0
     
-    MOV AH, 2
+    MOV AH, 2 
+    
+    ; CHECKING NEGATIVE
+    CMP NUMBER, 0
+    JNL PRINT 
+    
+    NEG NUMBER
+    MOV DL, '-'
+    INT 21H
+    
+    PRINT:
     MOV BX, NUMBER
     
     PRINT_START: 
