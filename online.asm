@@ -12,10 +12,9 @@ NUMBER DB ?
 SUM DW 0
 COUNT DB 0
 
-; DIVISION AND PRINTING PURPOSE
-DIVIDEND DW ?  
+; DIVISION AND PRINTING PURPOSE  
 DIVISOR DW ?
-QUOTIENT DB ?
+QUOTIENT DW ?
 REMAINDER DW ?  
 
 ; NEWLINE
@@ -74,11 +73,39 @@ NEWLINE DB 0AH, 0DH, '$'
     END_TOP_SUM: 
     
     ;; DIVISION STARTS (TO COUNT 1 IN BINARY REPRESENTATION OF SUM)  
+    ; VALUE SETTING
+    MOV DIVISOR, 2
+    MOV BX, SUM
     
+    LOOP_START: 
+        MOV QUOTIENT, 0
+        
+        TOP_DIV:
+            CMP BX, DIVISOR
+            JL END_TOP_DIV   
+            
+            SUB BX, DIVISOR
+            INC QUOTIENT
+            JMP TOP_DIV
+        END_TOP_DIV:  
+        
+        MOV REMAINDER, BX
+        MOV BX, QUOTIENT 
+        
+        CMP REMAINDER, 1
+        JNE CONTINUE_DIV
+        
+        INC COUNT
+        
+        CONTINUE_DIV:
+        CMP BX, 0
+        JNE LOOP_START
+    LOOP_END:
     
     ;; PRINTING COUNT    
-    ; VALUES SETTING 
-    MOV BX, COUNT  ; INPUT BASICALLY
+    ; VALUES SETTING
+    MOV BX, 0 
+    MOV BL, COUNT  ; INPUT BASICALLY
       
     MOV DIVISOR, 10  ; NOTICE (COUNT WILL NOT BE MORE THANT 12)  
     MOV QUOTIENT, 0
@@ -97,8 +124,8 @@ NEWLINE DB 0AH, 0DH, '$'
         END_DIV_PRINT:    
         
         ; PRINT DIGIT(QUOTIENT)
-        MOV DL, QUOTIENT 
-        ADD DL, 48
+        MOV DX, QUOTIENT 
+        ADD DX, 48
         INT 21H   
         
         ; TERMINATION CHECKING
@@ -121,8 +148,7 @@ NEWLINE DB 0AH, 0DH, '$'
         END_TOP_PRINT:   
         
         ; PREPARING FOR NEXT ITERATION
-        MOV BX, 0
-        MOV BL, QUOTIENT  ; ADDITIONAL  
+        MOV BX, QUOTIENT  ; ADDITIONAL  
         MOV DIVISOR, BX
         MOV BX, REMAINDER 
         MOV QUOTIENT, 0    
