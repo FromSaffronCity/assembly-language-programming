@@ -21,7 +21,7 @@ NEWLINE DB 0AH, 0DH, '$'  ; '$' IS A MUST
     MOV DIVISOR, 3
     
     MOV QUOTIENT, 0
-    MOV CX, DIVIDEND 
+    ; MOV CX, DIVIDEND 
     MOV BX, DIVIDEND
     
     TOP:

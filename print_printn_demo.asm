@@ -1,4 +1,4 @@
-TITLE EXAMPLE: DEMO
+TITLE EXAMPLE: PRINT_PRINTN
                    
 INCLUDE 'EMU8086.INC'                   
 .MODEL SMALL
@@ -8,7 +8,10 @@ INCLUDE 'EMU8086.INC'
 .CODE
  MAIN PROC    
     ; MOV AX, @DATA
-    ; MOV DS, AX     
+    ; MOV DS, AX    
+    
+    XOR AX, AX
+    MOV AX, 65
     
     PRINTN "HELLO WORLD"  
     PRINT "HELLO WORLD"

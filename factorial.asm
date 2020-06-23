@@ -2,7 +2,9 @@ TITLE EXAMPLE: FACTORIAL
 
 .MODEL SMALL
 .STACK 100H
-.DATA    
+.DATA  
+
+INPUT DW ?  
 
 MULTIPLICAND DW ?
 MULTIPLIER DW ? 
@@ -18,28 +20,51 @@ NEWLINE DB 0AH, 0DH, '$'
 .CODE
  MAIN PROC    
     MOV AX, @DATA
-    MOV DS, AX 
+    MOV DS, AX  
     
-    ; VALUES SETTING
-    MOV MULTIPLICAND, 20
-    MOV MULTIPLIER, 6  
-          
-    MOV BX, 0      
-    MOV CX, MULTIPLIER
+    ; INPUT HERE (NOT MORE THAN 7)
+    MOV INPUT, 7
     
-    TOP:
-        ADD BX, MULTIPLICAND
-    LOOP TOP
+    CMP INPUT, 0
+    JNE CONTINUE  
     
     MOV AH, 2
-    MOV DX, BX
+    MOV DX, '1'
     INT 21H
     
+    JMP EXIT   
     
+    CONTINUE:
+    
+    ; SETTING MULTIPLICAND, MULTIPLIER
+    MOV BX, INPUT
+    MOV MULTIPLICAND, BX
+    DEC BX
+    MOV MULTIPLIER, BX  
+    
+    ; FACTORIAL CALCULATION 
+    FACTORIAL_START:   
+        ; SETTING BX, CX
+        MOV BX, 0
+        MOV CX, MULTIPLIER
+    
+        TOP:
+            ADD BX, MULTIPLICAND
+        LOOP TOP
+        
+        ; VALUES SETTING
+        MOV MULTIPLICAND, BX 
+        DEC MULTIPLIER
+        
+        CMP MULTIPLIER, 0
+        JNE FACTORIAL_START    
+    FACTORIAL_END:
+         
+                      
     ; PRINT RESULT
     ; VALUES SETTING
-    MOV NUMBER, 23456
-    MOV DIVISOR, 10000  
+    MOV NUMBER, BX
+    MOV DIVISOR, 1000  
     MOV DIGIT, 0
     
     MOV AH, 2
@@ -74,21 +99,23 @@ NEWLINE DB 0AH, 0DH, '$'
         MOV BX, DIVISOR 
         MOV QUOTIENT, 0
         
-        TOP:
+        TOP_P:
             CMP BX, 10 
-            JL END_TOP 
+            JL END_TOP_P 
             
             SUB BX, 10
             INC QUOTIENT
-            JMP TOP
-        END_TOP:   
+            JMP TOP_P
+        END_TOP_P:   
         
         MOV BX, QUOTIENT  
         MOV DIVISOR, BX
         MOV BX, REMAINDER     
         
         JMP PRINT_START
-    PRINT_END:   
+    PRINT_END: 
+    
+    EXIT:  
           
     ; FINISHING            
     MOV AH, 4CH           
